@@ -19,6 +19,7 @@ namespace KufarAppProject
         public MainWindow()
         {
             InitializeComponent();
+            var kufar = new KufarApi();
         }
 
         private void Task1_Click(object sender, RoutedEventArgs e)

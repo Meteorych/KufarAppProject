@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace KufarAppProject
 {
-    public class KufarApiResponce
+    public class KufarApiResponse
     {
         [JsonPropertyName("ads")]
         public List<Ads> Ads { get; set; }
@@ -17,9 +17,9 @@ namespace KufarAppProject
     public class Ads
     {
         [JsonPropertyName("price_usd")]
-        public double Prive { get; set; }
+        public string Price { get; set; }
 
-        [JsonPropertyName("ad_parameter")]
+        [JsonPropertyName("ad_parameters")]
         public List<AdParameter> AdParameters { get; set; }
     }
 
@@ -29,6 +29,9 @@ namespace KufarAppProject
         public string P { get; set; }
 
         [JsonPropertyName("v")]
-        public string V { get; set; }
+        public object V { get; set; }
+
+        [JsonPropertyName("vl")]
+        public object Vl { get; set; }
     }
 }
