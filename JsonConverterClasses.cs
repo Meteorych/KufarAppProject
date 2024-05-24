@@ -1,20 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Serialization;
 
 namespace KufarAppProject
 {
     public class KufarApiResponse
     {
         [JsonPropertyName("ads")]
-        public List<Ads> Ads { get; set; }
+        public List<Ad> Ads { get; set; }
     }
 
-    public class Ads
+    public class Ad
     {
         [JsonPropertyName("price_usd")]
         public string Price { get; set; }
