@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using KufarAppProject.ApiClasses;
 
 namespace KufarAppProject
 {
@@ -22,10 +23,6 @@ namespace KufarAppProject
             _plotsWindow.Show();
         }
 
-        private void Task2_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
 
         private void Task3_Click(object sender, RoutedEventArgs e)
         {

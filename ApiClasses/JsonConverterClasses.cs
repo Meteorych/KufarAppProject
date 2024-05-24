@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace KufarAppProject
+namespace KufarAppProject.ApiClasses
 {
     public class KufarApiResponse
     {
@@ -15,6 +15,9 @@ namespace KufarAppProject
 
         [JsonPropertyName("ad_parameters")]
         public List<AdParameter> AdParameters { get; set; }
+
+        [JsonPropertyName("ad_link")]
+        public string AdLink { get; set; }
     }
 
     public class AdParameter

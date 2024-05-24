@@ -8,11 +8,9 @@
         Title="MainWindow" Height="450" Width="800">
     <Grid>
         <StackPanel HorizontalAlignment="Center">
-            <Separator Opacity="0" Height="20"/>
+            <Separator Opacity="0" Height="60"/>
             <Button Name="Task1" Content= "Task 1" Click="Task1_Click"/>
-            <Separator Opacity="0" Height="20"/>
-            <Button Name ="Task2" Content= "Task 2" Click="Task2_Click"/>
-            <Separator Opacity="0" Height="20"/>
+            <Separator Opacity="0" Height="60"/>
             <Button Name="Task3" Content= "Task 3" Click="Task3_Click"/>
         </StackPanel>
         <TextBlock Text="Created by Ivan Titlov 2024 " HorizontalAlignment="Right" VerticalAlignment="Bottom"/>

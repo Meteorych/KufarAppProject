@@ -1,4 +1,5 @@
-﻿using OxyPlot;
+﻿using KufarAppProject.ApiClasses;
+using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
 using System;
@@ -76,7 +77,7 @@ namespace KufarAppProject
                 series.Items.Add(new BarItem(pair.Value));
             }
             PriceByMetroModel.Axes.Add(categoryAxis);
-            PriceByMetroModel.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Title = "Стоимость за м²", Key = "Value"});
+            PriceByMetroModel.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Title = "Стоимость за м²", Key = "Value", MajorStep = 100});
             
 
             return series;
