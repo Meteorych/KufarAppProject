@@ -8,6 +8,7 @@ namespace KufarAppProject.ApiClasses
     {
         private const int NumberOfFlats = 30;
         private string _urlApi = $"https://api.kufar.by/search-api/v2/search/rendered-paginated?cat=1010&cur=USD&gtsy=country-belarus~province-minsk~locality-minsk&lang=ru&size={NumberOfFlats}&typ=sell";
+        private string _urlApiForBooking = $"https://api.kufar.by/search-api/v2/search/rendered-paginated?cat=1010&cur=USD&gtsy=country-belarus~province-minsk~locality-minsk&lang=ru&rnt=2&size={NumberOfFlats}&typ=let";
         private HttpClient _httpClient = new();
 
         public KufarApiResponse Response { get; private set; }
@@ -24,6 +25,7 @@ namespace KufarAppProject.ApiClasses
                 throw;
             }
         }
+
 
         /// <summary>
         /// Method to retrieve prices of flats by their floor.
@@ -151,6 +153,73 @@ namespace KufarAppProject.ApiClasses
             }
             return result;
         }
+
+        public List<(string, string)> GetFlatsForBooking(string district)
+        {
+            var result = new List<(string, string)>();
+            var responseString = _httpClient.GetStringAsync(_urlApiForBooking).Result;
+            Response = JsonSerializer.Deserialize<KufarApiResponse>(responseString) ?? throw new ArgumentNullException("No json data");
+            foreach (var ad in Response.Ads)
+            {
+                var onlineBooking = GetParameter<bool>(ad.AdParameters, "booking_enabled");
+                var area = GetParameter<string>(ad.AdParameters, "area", KeyToRetrieve.Vl);
+                if (area is null)
+                {
+                    continue;
+                }
+                area = area.ToLower();
+                if (area.Equals(district, StringComparison.CurrentCultureIgnoreCase) && onlineBooking is true)
+                {
+                    result.Add((ad.AdLink, area.ToLower()));
+                }
+            }
+            return result;
+        }
+
+        public List<(string, DateOnly)> GetFlatsForBookingByDate(string district, DateOnly date)
+        {
+            var result = new List<(string, DateOnly)>();
+            var responseString = _httpClient.GetStringAsync(_urlApiForBooking).Result;
+            Response = JsonSerializer.Deserialize<KufarApiResponse>(responseString) ?? throw new ArgumentNullException("No json data");
+            foreach (var ad in Response.Ads)
+            {
+                var onlineBooking = GetParameter<bool>(ad.AdParameters, "booking_enabled");
+                var area = GetParameter<string>(ad.AdParameters, "area", KeyToRetrieve.Vl);
+                if (area is null)
+                {
+                    continue;
+                }
+                area = area.ToLower();
+                if (area.Equals(district, StringComparison.CurrentCultureIgnoreCase) && onlineBooking is true)
+                {
+                    var bookingDates = ConvertBookingDates(GetParameter<List<int>>(ad.AdParameters, "booking_calendar") ?? []);
+                    if (bookingDates.Contains(date))
+                    {
+                        result.Add((ad.AdLink, date));
+                    }
+                }
+            }
+            return result;
+        }
+
+        private List<DateOnly> ConvertBookingDates(List<int> bookingDates)
+        {
+            var dates = new List<DateOnly>();
+            foreach (var dayCount in bookingDates)
+            {
+                dates.Add(DaysSinceEpochToDateTime(dayCount));
+            }
+            return dates;
+        }
+
+        private DateOnly DaysSinceEpochToDateTime(int dayCount)
+        {
+            // Reference date: Unix epoch (January 1, 1970)
+            var epoch = new DateOnly(1970, 1, 1);
+            return epoch.AddDays(dayCount);
+        }
+
+
         /// <summary>
         /// Get required parameter from Kufar Api.
         /// </summary>
@@ -169,13 +238,17 @@ namespace KufarAppProject.ApiClasses
             {
                 if (parameter.V is JsonElement jsonElement)
                 {
-                    if (jsonElement.ValueKind == JsonValueKind.Array && pName != "coordinates")
+                    if (jsonElement.ValueKind == JsonValueKind.Array && pName != "coordinates" && pName != "booking_calendar")
                     {
                         return JsonSerializer.Deserialize<T>(jsonElement[0].GetRawText());
                     }
              
                     else
                     {
+                        if (pName == "booking_calendar")
+                        {
+                            return default;
+                        }
                         return JsonSerializer.Deserialize<T>(jsonElement.GetRawText());
                     }
                 }
@@ -185,7 +258,14 @@ namespace KufarAppProject.ApiClasses
             {
                 if (parameter.Vl is JsonElement jsonElement)
                 {
-                    return JsonSerializer.Deserialize<T>(jsonElement[0].GetRawText());
+                    if (jsonElement.ValueKind == JsonValueKind.Array && pName != "coordinates")
+                    {
+                        return JsonSerializer.Deserialize<T>(jsonElement[0].GetRawText());
+                    }
+                    else
+                    {
+                        return JsonSerializer.Deserialize<T>(jsonElement.GetRawText());
+                    }
                 }
                 return (T)parameter.Vl;
             }
@@ -196,5 +276,7 @@ namespace KufarAppProject.ApiClasses
             V,
             Vl
         }
+
+
     }
 }

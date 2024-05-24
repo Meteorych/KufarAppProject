@@ -7,11 +7,8 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <StackPanel HorizontalAlignment="Center">
-            <Separator Opacity="0" Height="60"/>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
             <Button Name="Task1" Content= "Task 1" Click="Task1_Click"/>
-            <Separator Opacity="0" Height="60"/>
-            <Button Name="Task3" Content= "Task 3" Click="Task3_Click"/>
         </StackPanel>
         <TextBlock Text="Created by Ivan Titlov 2024 " HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
     </Grid>
