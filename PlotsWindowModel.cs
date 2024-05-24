@@ -77,7 +77,7 @@ namespace KufarAppProject
                 series.Items.Add(new BarItem(pair.Value));
             }
             PriceByMetroModel.Axes.Add(categoryAxis);
-            PriceByMetroModel.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Title = "Стоимость за м²", Key = "Value", MajorStep = 100});
+            PriceByMetroModel.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Title = "Стоимость за м²", Key = "Value", MajorStep = 200});
             
 
             return series;
