@@ -1,5 +1,4 @@
-﻿using OxyPlot.Axes;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Text.Json;
 
 namespace KufarAppProject.ApiClasses
