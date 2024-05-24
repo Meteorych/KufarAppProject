@@ -22,7 +22,11 @@ namespace KufarAppProject
                 throw;
             }
         }
-
+        
+        /// <summary>
+        /// Method to retrieve prices of flats by their floor.
+        /// </summary>
+        /// <returns>Dictionary with price as a valye and floor as a key.</returns>
         public Dictionary<int, double> GetPriceByFloor()
         {
             var interimResult = new Dictionary<int, List<double>>();
@@ -30,6 +34,7 @@ namespace KufarAppProject
             {
                 var floor = GetParameter<int>(ad.AdParameters, "floor");
                 var price = GetParameter<double>(ad.AdParameters, "square_meter");
+                if (price < 300) continue;
                 if (interimResult.TryGetValue(floor, out List<double>? value))
                 {
                     value.Add(price);
@@ -52,8 +57,9 @@ namespace KufarAppProject
             var interimResult = new Dictionary<int, List<double>>();
             foreach (var ad in Response.Ads)
             {
-                var rooms = GetParameter<int>(ad.AdParameters, "rooms");
+                var rooms = Convert.ToInt32(GetParameter<string>(ad.AdParameters, "rooms"));
                 var price = GetParameter<double>(ad.AdParameters, "square_meter");
+                if (price < 300) continue;
                 if (interimResult.TryGetValue(rooms, out List<double>? value))
                 {
                     value.Add(price);
@@ -76,12 +82,13 @@ namespace KufarAppProject
             var interimResult = new Dictionary<string, List<double>>();
             foreach (var ad in Response.Ads)
             {
-                var metro = GetParameter<string>(ad.AdParameters, "metro");
+                var metro = GetParameter<string>(ad.AdParameters, "metro", KeyToRetrieve.Vl);
                 if (metro is null)
                 {
                     continue;
                 }
                 var price = GetParameter<double>(ad.AdParameters, "square_meter");
+                if (price < 300) continue;
                 if (interimResult.TryGetValue(metro, out List<double>? value))
                 {
                     value.Add(price);
@@ -107,14 +114,25 @@ namespace KufarAppProject
             if (parameter == null) return default;
             if (parameterKeyToRetrieve == KeyToRetrieve.V)
             {
-                if (parameter.V is JsonElement jsonElement && jsonElement.ValueKind == JsonValueKind.Array)
+                if (parameter.V is JsonElement jsonElement)
                 {
-                    return JsonSerializer.Deserialize<T>(jsonElement[0].GetRawText());
+                    if (jsonElement.ValueKind == JsonValueKind.Array)
+                    {
+                        return JsonSerializer.Deserialize<T>(jsonElement[0].GetRawText());
+                    }
+                    else
+                    {
+                        return JsonSerializer.Deserialize<T>(jsonElement.GetRawText());
+                    }
                 }
                 return (T)parameter.V;
             }
             else
             {
+                if (parameter.Vl is JsonElement jsonElement)
+                {
+                    return JsonSerializer.Deserialize<T>(jsonElement[0].GetRawText());
+                }
                 return (T)parameter.Vl;
             }
         }

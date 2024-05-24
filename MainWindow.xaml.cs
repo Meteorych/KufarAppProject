@@ -7,16 +7,19 @@ namespace KufarAppProject
     /// </summary>
     public partial class MainWindow : Window
     {
+        private PlotsWindow _plotsWindow;
+        private KufarApi _kufarApi;
+
         public MainWindow()
         {
             InitializeComponent();
-            var kufar = new KufarApi();
+            _kufarApi = new KufarApi();
+            _plotsWindow = new PlotsWindow(_kufarApi);
         }
 
         private void Task1_Click(object sender, RoutedEventArgs e)
         {
-            var window = new PlotsWindow();
-            window.Show();
+            _plotsWindow.Show();
         }
 
         private void Task2_Click(object sender, RoutedEventArgs e)

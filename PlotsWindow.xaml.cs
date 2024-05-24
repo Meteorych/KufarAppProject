@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using OxyPlot;
+using System.Windows;
 
 namespace KufarAppProject
 {
@@ -7,8 +8,14 @@ namespace KufarAppProject
     /// </summary>
     public partial class PlotsWindow : Window
     {
-        public PlotsWindow()
+        private readonly KufarApi _kufarApi;
+        private readonly PlotsWindowModel _model;
+
+        public PlotsWindow(KufarApi kufarApi)
         {
+            _kufarApi = kufarApi;
+            _model = new PlotsWindowModel(_kufarApi);
+            DataContext = _model;
             InitializeComponent();
         }
     }
